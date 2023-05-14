@@ -1,6 +1,8 @@
 # fresh-inject-css
 
-A plugin for [Deno Fresh](https://fresh.deno.dev/) to inject CSS per-component
+A plugin for [Deno Fresh](https://fresh.deno.dev/) to inject CSS per-component.
+
+When building a web application, it is common to have a large amount of CSS styles in your app. The problem with this is that on some pages, you may not be using all of those styles. The `fresh-inject-css` plugin allows you to define your styles in a per-component manner and only ship the styles you need when rendering a page.
 
 # Installation
 
