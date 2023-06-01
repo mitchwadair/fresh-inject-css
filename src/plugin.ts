@@ -1,17 +1,25 @@
 import { Plugin, PluginRenderStyleTag } from "https://deno.land/x/fresh@1.1.2/server.ts";
 import { DOMParser, Element } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 
-export function InjectCSSPlugin(): Plugin {
+type InjectCSSPluginOptions = {
+    baseDirectory?: string;
+    attributeName?: string;
+};
+
+export function InjectCSSPlugin({
+    baseDirectory = "static",
+    attributeName = "inject-style",
+}: InjectCSSPluginOptions): Plugin {
     return {
         name: "inject-css",
         render: (ctx) => {
             const res = ctx.render();
             const document = new DOMParser().parseFromString(res.htmlText, "text/html");
-            const elementsWithStyleTag = document?.querySelectorAll("[inject-style]");
+            const elementsWithStyleTag = document?.querySelectorAll(`[${attributeName}]`);
             const sheetsToImport: Array<string> = [];
             elementsWithStyleTag?.forEach(($el) => {
                 const el = $el as unknown as Element;
-                const styleSheet = el.getAttribute("inject-style");
+                const styleSheet = el.getAttribute(attributeName);
                 if (styleSheet && !sheetsToImport.includes(styleSheet)) {
                     sheetsToImport.push(styleSheet);
                 }
@@ -19,7 +27,7 @@ export function InjectCSSPlugin(): Plugin {
             const styles: Array<PluginRenderStyleTag> = [];
             sheetsToImport.forEach((sheet) => {
                 styles.push({
-                    cssText: Deno.readTextFileSync(`./static/${sheet}`),
+                    cssText: Deno.readTextFileSync(`./${baseDirectory}/${sheet}`),
                     id: sheet.split("/").pop(),
                 });
             });
