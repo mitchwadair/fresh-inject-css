@@ -1,12 +1,15 @@
 import { Plugin, PluginRenderStyleTag } from "https://deno.land/x/fresh@1.1.2/server.ts";
 import { DOMParser, Element } from "https://deno.land/x/deno_dom@v0.1.38/deno-dom-wasm.ts";
 
-type PluginOptions = {
+type InjectCSSPluginOptions = {
     baseDirectory?: string;
     attributeName?: string;
 };
 
-export function InjectCSSPlugin({ baseDirectory = "static", attributeName = "inject-style" }: PluginOptions): Plugin {
+export function InjectCSSPlugin({
+    baseDirectory = "static",
+    attributeName = "inject-style",
+}: InjectCSSPluginOptions): Plugin {
     return {
         name: "inject-css",
         render: (ctx) => {
